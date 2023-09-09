@@ -3,19 +3,23 @@ import responses
 
 async def send_message(message, user_message):
     try:
-        response = response.handle_response(user_message)
-        message.channel.send(response)
+        response = responses.handle_response(user_message)
+        await message.channel.send(response)
     except Exception as e:
-        print(e)
+        print("excepton" + e)
 
 def run_discord_bot():
-    TOKEN = "MTE1MDEyMDM0MTY3OTY1NzExMQ.GasMUs.3-sMVdT0A8_ewpKkIllsDrXl0Esz5wnRQk1zPs"
-    client = discord.Client(intents=discord.Intents.default())
+    TOKEN = "MTE1MDEyMDM0MTY3OTY1NzExMQ.GWkOdJ.LgCPe5qi0JC4JPCzNDj7mw-2fVUH2byVsrm7BU"
+    intents= discord.Intents.default()
+    intents.message_content = True
+    client = discord.Client(intents=intents)
+    
 
     @client.event
     async def on_ready():
         print(f"{client.user} is now running")
     
+    @client.event
     async def on_message(message):
         if message.author == client.user:
             return
