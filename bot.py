@@ -1,5 +1,9 @@
 import discord
 import responses
+import os
+from dotenv import load_dotenv
+load_dotenv('.env')
+
 
 async def send_message(message, user_message):
     try:
@@ -9,7 +13,8 @@ async def send_message(message, user_message):
         print("excepton" + e)
 
 def run_discord_bot():
-    TOKEN = "MTE1MDEyMDM0MTY3OTY1NzExMQ.GWkOdJ.LgCPe5qi0JC4JPCzNDj7mw-2fVUH2byVsrm7BU"
+    TOKEN = os.getenv('TOKEN')
+    #print(os.environ.get('BallsBotToken'))
     intents= discord.Intents.default()
     intents.message_content = True
     client = discord.Client(intents=intents)
