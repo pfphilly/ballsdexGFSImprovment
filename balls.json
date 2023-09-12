@@ -3,10 +3,24 @@
         "name" : {
             "1": "United States of America",
             "2": "USA",
-            "3": "US",
-            "4": "Israel"
+            "3": "US"
         } ,
-        "flag" : "1F1FA-1F1F8_color.png"
+        "flag" : "./flagpics/1F1FA-1F1F8_color.png"
+
+    },
+    "2" : {
+        "name" : {
+            "1": "China"
+        } ,
+        "flag" : "./flagpics/1F1E8-1F1F3_color.png"
+
+    },
+    "3" : {
+        "name" : {
+            "1": "Israel",
+            "2": "The Holy Land"
+        } ,
+        "flag" : "./flagpics/1F1EE-1F1F1_color.png"
 
     }
     

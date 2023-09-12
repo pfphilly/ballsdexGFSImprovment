@@ -6,8 +6,13 @@ import json
 from dotenv import load_dotenv
 load_dotenv('.env')
 import time
-
-
+import random
+global lastSpawn
+lastSpawn = 0
+global timeUntilSpawn
+timeUntilSpawn =0
+global lastMessageTime
+lastMessageTime = 0
 async def send_message(message, user_message):
     try:
         response = responses.handle_response(user_message)
@@ -18,26 +23,61 @@ async def send_message(message, user_message):
 #class SimpleView(discord.ui.View)
 
 async def spawnBall(message):
+    global lastSpawn
+    global timeUntilSpawn
+    global lastMessageTime
+    if lastSpawn == 0:
+        with open('balls.json', 'r') as f:
+            embed = discord.Embed(
+            title="Quick, Somebody, Catch this wild countryball!", 
+            color=discord.Color.random()
+            )
+            data = json.load(f)
+            flagSent = str(random.randint(1,2))
+            print(flagSent)
+            flagpath = data[flagSent]["flag"]
+            embed.set_image(url=f"attachment://{flagpath}")
+            view = discord.ui.View()
+            button=discord.ui.Button(label="CATCH")
+            view.add_item(button)
+            #embed.set_image(file=discord.File(flagpath))
+            #print(flagpath)
+            if message.channel.name == 'alphatesting':
+                await message.channel.send(embed=embed, file=discord.File(flagpath), view=view)
+            
+            lastSpawn = time.time()
+            timeUntilSpawn = random.randint(20, 100)
+            print(timeUntilSpawn)
+            return
+    if time.time() - lastSpawn > (10 + timeUntilSpawn) and time.time() - lastMessageTime < 4:
+        with open('balls.json', 'r') as f:
+            embed = discord.Embed(
+            title="Quick, Somebody, Catch this wild countryball!", 
+            color=discord.Color.random()
+            )
+            data = json.load(f)
+            flagSent = str(random.randint(1,3))
+            print(flagSent)
+            flagpath = data[flagSent]["flag"]
+            embed.set_image(url=f"attachment://{flagpath}")
+            view = discord.ui.View()
+            button=discord.ui.Button(label="CATCH")
+            view.add_item(button)
+            #embed.set_image(file=discord.File(flagpath))
+            #print(flagpath)
+            if message.channel.name == 'alphatesting':
+                await message.channel.send(embed=embed, file=discord.File(flagpath), view=view)
+            lastSpawn = time.time()
+            
+            timeUntilSpawn = random.randint(20, 1000)
+            print(timeUntilSpawn)
+            return
+    else:
+        return
     
     
-    with open('balls.json', 'r') as f:
-        embed = discord.Embed(
-        title="Quick, Somebody, Catch this wild countryball!", 
-        color=discord.Color.random()
-        )
-        data = json.load(f)
-        flagpath = data['1']["flag"]
-        embed.set_image(url=f"attachment://{flagpath}")
-        view = discord.ui.View()
-        button=discord.ui.Button(label="CATCH")
-        view.add_item(button)
-        #embed.set_image(file=discord.File(flagpath))
-        #print(flagpath)
-        if message.channel.name == 'alphatesting':
-            await message.channel.send(embed=embed, file=discord.File(flagpath), view=view)
-    #embed.set_image()
-    #await message.channel.send
-global lastSpawn
+    
+
 lastSpawn = 0
 
 def run_discord_bot():
@@ -55,20 +95,15 @@ def run_discord_bot():
     
     @client.event
     async def on_message(message):
+        global lastMessageTime
+        lastMessageTime = time.time()
         if message.author.display_name == client.user.display_name:
             return
-        try: 
-            if lastSpawn == 0:
-                print(0)
-        except:
-            await spawnBall(message)
-            lastSpawn = time.time()
-            return
+        
+        await spawnBall(message)
+        return
             
-        if lastSpawn - time.time() > 5:
-            lastSpawn = time.time()
-            print(lastSpawn)
-            await spawnBall(message)
+        
     
     @client.command()
     async def about(ctx):
