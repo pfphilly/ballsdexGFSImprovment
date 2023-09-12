@@ -5,6 +5,7 @@ import os
 import json
 from dotenv import load_dotenv
 load_dotenv('.env')
+import time
 
 
 async def send_message(message, user_message):
@@ -36,7 +37,8 @@ async def spawnBall(message):
             await message.channel.send(embed=embed, file=discord.File(flagpath), view=view)
     #embed.set_image()
     #await message.channel.send
-
+global lastSpawn
+lastSpawn = 0
 
 def run_discord_bot():
     TOKEN = os.getenv('TOKEN')
@@ -45,17 +47,27 @@ def run_discord_bot():
     intents.message_content = True
     client = commands.Bot(description="Balls", command_prefix='/B ', intents=intents, help_command=None)
     
-
+   
     @client.event
     async def on_ready():
         print(f"{client.user} is now running")
 
+    
     @client.event
     async def on_message(message):
         if message.author.display_name == client.user.display_name:
             return
-        
-        if last_spawn == "":
+        try: 
+            if lastSpawn == 0:
+                print(0)
+        except:
+            await spawnBall(message)
+            lastSpawn = time.time()
+            return
+            
+        if lastSpawn - time.time() > 5:
+            lastSpawn = time.time()
+            print(lastSpawn)
             await spawnBall(message)
     
     @client.command()
@@ -66,7 +78,7 @@ def run_discord_bot():
         embed.add_field(name="More Commands", value="When i get the time to add commands they will be here.")
         embed.add_field(name="Thanks to my dads", value="Thank you to my dads Peter and Jonathan")
         await ctx.send(embed=embed)
-    last_spawn = ""
+   
     
 
 
