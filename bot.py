@@ -69,7 +69,7 @@ async def spawnBall(message):
                 await message.channel.send(embed=embed, file=discord.File(flagpath), view=view)
             lastSpawn = time.time()
             
-            timeUntilSpawn = random.randint(20, 1000)
+            timeUntilSpawn = random.randint(20, 100)
             print(timeUntilSpawn)
             return
     else:
